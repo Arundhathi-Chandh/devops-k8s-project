@@ -14,13 +14,13 @@ jobs:
       uses: actions/checkout@v3
 
     # Optional: Build & Push Docker image for Node.js app
-    - name: Build Docker image
-      run: docker build -t mydockerhubuser/myapp:${{ github.sha }} ./app
+   # - name: Build Docker image
+    #  run: docker build -t mydockerhubuser/myapp:${{ github.sha }} ./app
 
-    - name: Push Docker image
-      run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker push mydockerhubuser/myapp:${{ github.sha }}
+    #- name: Push Docker image
+     # run: |
+      #  echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+       # docker push mydockerhubuser/myapp:${{ github.sha }}
 
     - name: Set up kubectl
       uses: azure/setup-kubectl@v3
