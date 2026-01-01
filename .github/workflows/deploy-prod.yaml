@@ -1,0 +1,44 @@
+name: Deploy to Prod
+
+on:
+  push:
+    branches:
+      - prod   # trigger when pushing to prod branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    # Optional: Build & Push Docker image for Node.js app
+    - name: Build Docker image
+      run: docker build -t mydockerhubuser/myapp:${{ github.sha }} ./app
+
+    - name: Push Docker image
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        docker push mydockerhubuser/myapp:${{ github.sha }}
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.29.0'
+
+    - name: Configure kubeconfig
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+
+    - name: Deploy to prod overlay
+      run: |
+        kubectl apply -k k8s/overlays/prod
+
+    - name: Smoke test (check all deployments)
+      run: |
+        for dep in $(kubectl get deploy -n prod -o jsonpath='{.items[*].metadata.name}'); do
+          kubectl rollout status deployment/$dep -n prod
+        done
+        kubectl get pods -n prod
