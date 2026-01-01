@@ -1,0 +1,16 @@
+namespace: dev
+resources:
+  - ../../base
+  - ingress.yaml
+
+configMapGenerator:
+  - name: app-config
+    literals:
+      - APP_ENV=dev
+      - LOG_LEVEL=debug
+
+secretGenerator:
+  - name: app-secrets
+    literals:
+      - API_KEY=dev-api-key
+      - DB_PASSWORD=dev-password

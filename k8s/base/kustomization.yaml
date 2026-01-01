@@ -1,0 +1,9 @@
+resources:
+  - app-deployment.yaml
+  - app-service.yaml
+  - api-deployment.yaml
+  - api-service.yaml
+  - health-deployment.yaml
+  - health-service.yaml
+  - rbac.yaml
+  - networkpolicy.yaml

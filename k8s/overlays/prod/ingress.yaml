@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devops-ingress
+  namespace: prod
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+spec:
+  ingressClassName: ingress-nginx
+  tls:
+  - hosts:
+    - af0abd6fa68e54280b401631ef016471-440213593.ap-south-1.elb.amazonaws.com
+    secretName: prod-myapp-tls
+  rules:
+  - host: af0abd6fa68e54280b401631ef016471-440213593.ap-south-1.elb.amazonaws.com
+    http:
+      paths:
+      - path: /app
+        pathType: Prefix
+        backend:
+          service:
+            name: app-svc
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: dummy-api-svc
+            port:
+              number: 80
+      - path: /health
+        pathType: Prefix
+        backend:
+          service:
+            name: health-svc
+            port:
+              number: 80

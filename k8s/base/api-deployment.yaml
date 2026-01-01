@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dummy-api
+  template:
+    metadata:
+      labels:
+        app: dummy-api
+    spec:
+      serviceAccountName: dummy-api-sa
+      containers:
+      - name: dummy-api
+        image: hashicorp/http-echo:0.2.3
+        args:
+          - "-text={\"message\":\"Dummy API response\"}"
+        ports:
+        - containerPort: 5678
+

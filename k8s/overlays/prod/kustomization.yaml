@@ -1,0 +1,16 @@
+namespace: prod
+resources:
+  - ../../base
+  - ingress.yaml
+
+configMapGenerator:
+  - name: app-config
+    literals:
+      - APP_ENV=prod
+      - LOG_LEVEL=info
+
+secretGenerator:
+  - name: app-secrets
+    literals:
+      - API_KEY=prod-api-key
+      - DB_PASSWORD=prod-password

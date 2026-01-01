@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-service
+  template:
+    metadata:
+      labels:
+        app: health-service
+    spec:
+      serviceAccountName: health-sa
+      containers:
+      - name: health-service
+        image: hashicorp/http-echo:0.2.3
+        args:
+          - "-text={\"status\":\"All systems healthy\"}"
+        ports:
+        - containerPort: 5678
+
